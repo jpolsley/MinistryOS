@@ -73,7 +73,17 @@
 
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
-        const { DragDropContext, Droppable, Draggable } = window.ReactBeautifulDnd || {};
+        const ReactBeautifulDndGlobal = window.ReactBeautifulDnd || window.ReactBeautifulDnD;
+        const DragDropFallback = ({ children }) => children;
+        const DroppableFallback = ({ children }) =>
+            children({ innerRef: () => {}, droppableProps: {}, placeholder: null });
+        const DraggableFallback = ({ children }) =>
+            children({ innerRef: () => {}, draggableProps: {}, dragHandleProps: {} });
+        const { DragDropContext, Droppable, Draggable } = ReactBeautifulDndGlobal || {
+            DragDropContext: DragDropFallback,
+            Droppable: DroppableFallback,
+            Draggable: DraggableFallback,
+        };
 
         // --- ICONS ---
         const Icon = ({ path, size = 16, className = "" }) => (
